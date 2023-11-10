@@ -63,9 +63,16 @@ public class GetDataTests
     }
 
     [Fact]
-    public void GetScouts()
+    public async Task GetMembers()
     {
+        var currentTerm = (await _client.GetTermsAsync()).ToArray().First(t => t.Current);
         
+        var members = (await _client.GetMembersAsync(currentTerm.Id)).ToArray();
+        Assert.NotNull(members);
+        Assert.NotEmpty(members);
+
+        var me = members.First(m => m.LastName == "Nield");
+        Assert.NotNull(me);
     }
     
     [Fact]

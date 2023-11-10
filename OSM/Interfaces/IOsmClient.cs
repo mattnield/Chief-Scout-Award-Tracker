@@ -7,4 +7,5 @@ public interface IOsmClient
     
     Task<IEnumerable<Badge>> GetBadgesAsync(string termId, BadgeType type);
     Task<IEnumerable<Term>> GetTermsAsync();
+    Task<IEnumerable<Member>> GetMembersAsync(string termId);
 }

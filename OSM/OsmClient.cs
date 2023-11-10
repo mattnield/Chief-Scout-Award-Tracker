@@ -65,8 +65,6 @@ public class OsmClient : IOsmClient
         }
         
         return badges;
-        
-        return Array.Empty<Badge>();
     }
 
     public async Task<IEnumerable<Term>> GetTermsAsync()
@@ -82,5 +80,24 @@ public class OsmClient : IOsmClient
         var terms = termsNodes.Matches.SelectMany(match =>
             JsonSerializer.Deserialize<IEnumerable<Term>>(match.Value.ToJsonString()));
         return terms;
+    }
+
+    public async Task<IEnumerable<Member>> GetMembersAsync(string termId)
+    {
+        var request = new RestRequest("/ext/members/contact/");
+        request.Parameters.AddParameter(new QueryParameter("action", "getListOfMembers"));
+        request.Parameters.AddParameter(new QueryParameter("sort", "dob"));
+        request.Parameters.AddParameter(new QueryParameter("sectionid", _options.SectionId.ToString()));
+        request.Parameters.AddParameter(new QueryParameter("termid", termId));
+        request.Parameters.AddParameter(new QueryParameter("section", _options.Section));
+        var response = await _client.ExecuteGetAsync(request);
+        var jsonString = response.Content ?? string.Empty;
+        var node = JsonNode.Parse(jsonString);
+        var memberNodes = JsonPath.Parse($"$['items']").Evaluate(node);
+
+        if(memberNodes.Matches == null || !memberNodes.Matches.Any()) return Array.Empty<Member>();
+        
+        return memberNodes.Matches.SelectMany(match =>
+            JsonSerializer.Deserialize<IEnumerable<Member>>(match.Value.ToJsonString()));
     }
 }
