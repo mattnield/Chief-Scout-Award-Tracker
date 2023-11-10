@@ -41,12 +41,12 @@ public class OsmAuthenticator : AuthenticatorBase
         var client = new RestClient(_options.ClientEndpoint);
 
         var request = new RestRequest("/oauth/token", Method.Get)
-            .AddParameter("client_id", _options.ClientId)
-            .AddParameter("client_secret", _options.ClientSecret)
-            .AddParameter("grant_type", "client_credentials")
-            .AddParameter("scope", string.Join('+', _options.Permissions.Select(p => p.ToString())));
+            .AddQueryParameter("client_id", _options.ClientId)
+            .AddQueryParameter("client_secret", _options.ClientSecret)
+            .AddQueryParameter("grant_type", "client_credentials")
+            .AddQueryParameter("scope", string.Join('+', _options.Permissions.Select(p => p.ToString())),false);
 
-        var response = await client.PostAsync<TokenResponse>(request);
+        var response = await client.GetAsync<TokenResponse>(request);
         _tokenExpiration = DateTime.Now.AddSeconds(response!.ExpiresIn);
         return $"{response!.TokenType} {response!.AccessToken}";
 
