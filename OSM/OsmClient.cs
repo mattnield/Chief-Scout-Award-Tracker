@@ -31,7 +31,7 @@ public class OsmClient : IOsmClient
         _client = new RestClient(restClientOptions);
     }
 
-    public async Task<IEnumerable<Badge>> GetBadgesAsync(string termId, BadgeType type)
+    public async Task<IList<Badge>> GetBadgesAsync(string termId, BadgeType type)
     {
         var request = new RestRequest("/ext/badges/records/");
         request.Parameters.AddParameter(new QueryParameter("action", "getBadgeStructureByType"));
@@ -67,7 +67,7 @@ public class OsmClient : IOsmClient
         return badges;
     }
 
-    public async Task<IEnumerable<Term>> GetTermsAsync()
+    public async Task<IList<Term>> GetTermsAsync()
     {
         var request = new RestRequest("/ext/generic/startup/");
         request.Parameters.AddParameter(new QueryParameter("action", "getData"));
@@ -79,10 +79,10 @@ public class OsmClient : IOsmClient
         if(termsNodes.Matches == null || !termsNodes.Matches.Any()) return Array.Empty<Term>();
         var terms = termsNodes.Matches.SelectMany(match =>
             JsonSerializer.Deserialize<IEnumerable<Term>>(match.Value.ToJsonString()));
-        return terms;
+        return terms.ToList();
     }
 
-    public async Task<IEnumerable<Member>> GetMembersAsync(string termId)
+    public async Task<IList<Member>> GetMembersAsync(string termId)
     {
         var request = new RestRequest("/ext/members/contact/");
         request.Parameters.AddParameter(new QueryParameter("action", "getListOfMembers"));
@@ -98,6 +98,6 @@ public class OsmClient : IOsmClient
         if(memberNodes.Matches == null || !memberNodes.Matches.Any()) return Array.Empty<Member>();
         
         return memberNodes.Matches.SelectMany(match =>
-            JsonSerializer.Deserialize<IEnumerable<Member>>(match.Value.ToJsonString()));
+            JsonSerializer.Deserialize<IEnumerable<Member>>(match.Value.ToJsonString())).ToList();
     }
 }

@@ -5,7 +5,7 @@ namespace OSM.Interfaces;
 public interface IOsmClient
 {
     
-    Task<IEnumerable<Badge>> GetBadgesAsync(string termId, BadgeType type);
-    Task<IEnumerable<Term>> GetTermsAsync();
-    Task<IEnumerable<Member>> GetMembersAsync(string termId);
+    Task<IList<Badge>> GetBadgesAsync(string termId, BadgeType type);
+    Task<IList<Term>> GetTermsAsync();
+    Task<IList<Member>> GetMembersAsync(string termId);
 }
