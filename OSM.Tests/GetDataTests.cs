@@ -74,8 +74,15 @@ public class GetDataTests
     }
     
     [Fact]
-    public void BadgeProgress()
+    public async Task BadgeCompletion()
     {
+        var currentTerm = (await _client.GetTermsAsync()).ToArray().First(t => t.Current);
+        var skillsBadge =
+            (await _client.GetBadgesAsync(currentTerm.Id, BadgeType.Challenge)).First(b => b.Name == "Skills");
+
+        var completion = await _client.GetBadgeCompletion(currentTerm.Id, skillsBadge.Id, skillsBadge.Version);
         
+        Assert.NotNull(completion);
+        Assert.NotEmpty(completion);
     }
 }

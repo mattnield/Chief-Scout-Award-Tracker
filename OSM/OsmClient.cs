@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using OSM.Configuration;
 using OSM.Interfaces;
 using OSM.Models;
+using OSM.Models.Converters;
 using RestSharp;
 
 namespace OSM;
@@ -99,5 +100,33 @@ public class OsmClient : IOsmClient
         
         return memberNodes.Matches.SelectMany(match =>
             JsonSerializer.Deserialize<IEnumerable<Member>>(match.Value.ToJsonString())).ToList();
+    }
+
+    public async Task<IList<BadgeCompletion>> GetBadgeCompletion(string termId, string badgeId, string badgeVersion)
+    {
+        var request = new RestRequest("/ext/badges/records/");
+        request.Parameters.AddParameter(new QueryParameter("action", "getBadgeRecords"));
+        request.Parameters.AddParameter(new QueryParameter("sectionid", _options.SectionId.ToString()));
+        request.Parameters.AddParameter(new QueryParameter("termid", termId));
+        request.Parameters.AddParameter(new QueryParameter("section", _options.Section));
+        request.Parameters.AddParameter(new QueryParameter("badge_id", badgeId));
+        request.Parameters.AddParameter(new QueryParameter("badge_version", badgeVersion));
+        request.Parameters.AddParameter(new QueryParameter("underscores", null));
+        
+        var response = await _client.ExecuteGetAsync(request);
+        if(string.IsNullOrEmpty(response.Content)) return Array.Empty<BadgeCompletion>();
+        var node = JsonNode.Parse(response.Content!);
+        
+        var evaluateResult = JsonPath.Parse($"$['items'][*]").Evaluate(node);
+
+        if(evaluateResult.Matches == null || !evaluateResult.Matches.Any()) return Array.Empty<BadgeCompletion>();
+        JsonSerializerOptions options = new JsonSerializerOptions();
+        options.Converters.Add(new BadgeAwardConverter());
+        var output = evaluateResult.Matches
+            .Select(match =>
+                JsonSerializer.Deserialize<BadgeCompletion>(match.Value.AsJsonString(), options))
+            .Where(result => result != null);
+
+        return output.ToList();
     }
 }
