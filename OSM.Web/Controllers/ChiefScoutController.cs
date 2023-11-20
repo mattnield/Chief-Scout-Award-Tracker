@@ -1,0 +1,33 @@
+using Microsoft.AspNetCore.Mvc;
+using OSM.Interfaces;
+using OSM.Models;
+using OSM.Web.Models;
+
+namespace OSM.Web.Controllers;
+
+public class ChiefScoutController : Controller
+{
+    private IOsmClient _client { get; set; }
+
+    public ChiefScoutController(IOsmClient client)
+    {
+        _client = client;
+    }
+    
+    // GET
+    public async Task<IActionResult> Index()
+    {
+        var term = (await _client.GetTermsAsync()).First(t => t.Current);
+        var model = new ChiefScoutViewModel();
+        model.Badges = (await _client.GetBadgesAsync(term.Id, BadgeType.Challenge)).Where(badge => badge.Id!="1539").ToList();
+        foreach (var badge in model.Badges)
+        {
+            model.Completion.Add(
+                badge.Id, 
+                await _client.GetBadgeCompletion(term.Id, badge.Id, badge.Version)
+            );
+        }
+        model.Members = (await _client.GetMembersAsync(term.Id)).Where(m => m.PatrolId >= 0).ToList();
+        return View(model);
+    }
+}

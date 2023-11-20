@@ -27,22 +27,48 @@ public class BadgeAwardConverter : JsonConverter<BadgeCompletion>
                 string propertyName = reader.GetString();
                 reader.Read(); // Move to the property value
 
-                if (propertyName.StartsWith("_") && double.TryParse(propertyName[1..], out _))
+                try
                 {
-                    valuesList.Add(new KeyValuePair<string, string>(propertyName.TrimStart('_'), reader.GetString()));
-                }
-                else
-                {
-                    // Handle other properties of the Scout class
-                    switch (propertyName)
+                    if (propertyName.StartsWith("_") && double.TryParse(propertyName[1..], out _))
                     {
-                        case "scoutid":
-                            badgeCompletion.ScoutId = reader.GetInt32();
-                            break;
-                        default:
-                            reader.Skip();
-                            break;
+                        switch (reader.TokenType)
+                        {
+                            case JsonTokenType.Number:
+                                valuesList.Add(
+                                    new KeyValuePair<string, string>(propertyName.TrimStart('_'),
+                                        reader.GetInt32().ToString() ?? string.Empty));
+                                break;
+                            default:
+                                valuesList.Add(
+                                    new KeyValuePair<string, string>(propertyName.TrimStart('_'),
+                                        reader.GetString() ?? string.Empty));
+                                break;
+                        }
                     }
+                    else
+                    {
+                        // Handle other properties of the Scout class
+                        switch (propertyName)
+                        {
+                            case "scoutid":
+                                badgeCompletion.ScoutId = reader.GetInt32();
+                                break;
+                            case "awarded":
+                                badgeCompletion.Awarded = (reader.GetString() == "1");
+                                break;
+                            case "completed":
+                                badgeCompletion.Completed = (reader.GetString() == "1");
+                                break;
+                            default:
+                                reader.Skip();
+                                break;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    Console.WriteLine($"Fail at {propertyName}");
                 }
             }
         }

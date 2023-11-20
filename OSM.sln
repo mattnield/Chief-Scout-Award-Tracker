@@ -8,6 +8,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OSM.Services", "OSM.Service
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OSM", "OSM\OSM.csproj", "{3E0200B6-97FF-411C-9762-BD2130D52F0F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OSM.Console", "OSM.Console\OSM.Console.csproj", "{00758D7C-7504-4173-83F9-86DAF3E68600}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OSM.Web", "OSM.Web\OSM.Web.csproj", "{F1AD4DE7-0D16-44D6-AC06-9A7F4771386B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +34,13 @@ Global
 		{3E0200B6-97FF-411C-9762-BD2130D52F0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E0200B6-97FF-411C-9762-BD2130D52F0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E0200B6-97FF-411C-9762-BD2130D52F0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00758D7C-7504-4173-83F9-86DAF3E68600}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00758D7C-7504-4173-83F9-86DAF3E68600}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00758D7C-7504-4173-83F9-86DAF3E68600}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00758D7C-7504-4173-83F9-86DAF3E68600}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1AD4DE7-0D16-44D6-AC06-9A7F4771386B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1AD4DE7-0D16-44D6-AC06-9A7F4771386B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1AD4DE7-0D16-44D6-AC06-9A7F4771386B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1AD4DE7-0D16-44D6-AC06-9A7F4771386B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

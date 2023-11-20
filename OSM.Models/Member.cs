@@ -12,5 +12,7 @@ public class Member
     public string Initial => LastName.Substring(0, 1) ?? string.Empty;
     [JsonPropertyName("lastname")]
     public string LastName { get; set; } = string.Empty;
-    
+    [JsonPropertyName("patrolid")]
+    public int PatrolId { get; set; }
+
 }

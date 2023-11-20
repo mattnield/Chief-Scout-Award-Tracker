@@ -10,7 +10,7 @@ public class ConvertTests
     [Fact]
     public void DeserializeBadgeCompletionRecord()
     {
-        var json = "{\"scoutid\":2147236,\"firstname\":\"John\",\"lastname\":\"Doe\",\"awarded\":\"0\",\"completed\":\"0\",\"awardeddate\":\"0000-00-00\",\"photo_guid\":\"32563a02-35ec-421a-b2eb-a2a904b76164\",\"_114263\":\"YorkshireDalesTrip2022\",\"_114264\":\"SummerCamp2022-KentJamboree\",\"_114265\":\"GroupCamp2023\",\"_114267\":\"YorkshireDalesTrip2022\",\"_114268\":\"YorkshireDalesTrip2022\",\"_114269\":\"KentJamboree2022\",\"read_only\":true,\"eligibilty\":true,\"_filterString\":\"johndoe\",\"emailable\":true}";
+        var json = "{\"scoutid\":2410849,\"firstname\":\"John\",\"lastname\":\"Doe\",\"awarded\":\"0\",\"completed\":\"0\",\"awardeddate\":\"0000-00-00\",\"photo_guid\":\"32563a02-35ec-421a-b2eb-a2a904b76164\",\"_114263\":\"YorkshireDalesTrip2022\",\"_114264\":\"SummerCamp2022-KentJamboree\",\"_114265\":\"GroupCamp2023\",\"_114267\":\"YorkshireDalesTrip2022\",\"_114268\":\"YorkshireDalesTrip2022\",\"_114269\":\"KentJamboree2022\",\"read_only\":true,\"eligibilty\":true,\"_filterString\":\"johndoe\",\"emailable\":true}";
         JsonSerializerOptions options = new JsonSerializerOptions();
         options.Converters.Add(new BadgeAwardConverter());
         var badgeCompletion = JsonSerializer.Deserialize<BadgeCompletion>(json, options);
@@ -26,7 +26,7 @@ public class ConvertTests
     {
         var badgeCompletion = new BadgeCompletion()
         {
-            ScoutId = 123456,
+            ScoutId = 2410849,
             Achievements = new List<KeyValuePair<string, string>>()
             {
                 new ("0234567","First Value"),
