@@ -1,15 +1,21 @@
 using OSM;
 using OSM.Interfaces;
+using OSM.Web.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddSingleton<IOsmClient, OsmClient>();
+builder.Services.AddTransient<BasicAuthMiddleware>();
 builder.Services.AddControllersWithViews();
 
 Console.WriteLine(builder.Configuration["OsmOptions:ClientId"]);
 
 var app = builder.Build();
+
+app.UseMiddleware<BasicAuthMiddleware>();
+app.UseAuthentication();
+app.UseAuthorization();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
