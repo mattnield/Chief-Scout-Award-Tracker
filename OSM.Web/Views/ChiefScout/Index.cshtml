@@ -17,6 +17,10 @@
         text-align:left;
     }
     
+    thead th {
+        vertical-align: bottom;
+    }
+    
     td, th {
         border: 1px solid black;
     }
@@ -43,66 +47,70 @@
 </style>
 <h2>@ViewBag.Title</h2>
 <table>
+    <thead>
     <tr>
         <th>Badge</th>
         <th>Module</th>
         <th>Task</th>
         @foreach (var member in Model.Members)
         {
-            <th class="memberName">@($"{member.FirstName} {member.Initial}")</th>
+            <th><span class="memberName">@($"{member.FirstName} {member.Initial}")</span></th>
         }
     </tr>
+    </thead>
+    <tbody>
     @foreach (var badge in Model.Badges)
-    {               
-           @foreach (var criteria in badge.Criteria)
-           {
-               <tr>
-                   @if (badgeName != badge.Name)
-                   {
-                       badgeName = badge.Name;
-                       moduleName = string.Empty;
-                       
-                       <th rowspan="@badge.Criteria.Count">@badge.Name</th>
-                   }
-                   
-                   @if (moduleName != criteria.Module)
-                   {
-                       moduleName = criteria.Module;
-                       highlight = !highlight;
-                       
-                       <th rowspan="@(badge.Criteria.Count(c=> c.Module == moduleName))">@criteria.Module</th>
-                   }
-                   
-                   <th class="@(highlight?"rowHighlight":string.Empty)">@criteria.Name</th>
+    {
+        @foreach (var criteria in badge.Criteria)
+        {
+            <tr>
+                @if (badgeName != badge.Name)
+                {
+                    badgeName = badge.Name;
+                    moduleName = string.Empty;
 
-                   @foreach (var scout in Model.Members)
-                   {
-                       var badgeCompletion = Model.Completion[badge.Id]
-                           .FirstOrDefault(bc => bc.ScoutId == scout.Id);
-                       var completionRecord = badgeCompletion
-                           ?.Achievements
-                           .FirstOrDefault(a => a.Key == criteria.Id)
-                           .Value ?? string.Empty;
-                       var completed = !string.IsNullOrEmpty(completionRecord) && !completionRecord.StartsWith('x');
+                    <th rowspan="@badge.Criteria.Count">@badge.Name</th>
+                }
 
-                       if (completed && badgeCompletion.Completed)
-                       {
-                           <td class="@(highlight?"rowHighlight":string.Empty) badgeComplete">C</td>
-                       }
-                       else
-                       {
-                           if (completed)
-                           {
-                               <td class="@(highlight?"rowHighlight":string.Empty) taskComplete">Y</td>
-                           }
-                           else
-                           {
-                               <td class="@(highlight?"rowHighlight":string.Empty)">&nbsp;</td>
-                           }
-                       }
-                   }
-               </tr>
-           }
+                @if (moduleName != criteria.Module)
+                {
+                    moduleName = criteria.Module;
+                    highlight = !highlight;
+
+                    <th rowspan="@(badge.Criteria.Count(c => c.Module == moduleName))">@criteria.Module</th>
+                }
+
+                <th class="@(highlight ? "rowHighlight" : string.Empty)">@criteria.Name</th>
+
+                @foreach (var scout in Model.Members)
+                {
+                    var badgeCompletion = Model.Completion[badge.Id]
+                        .FirstOrDefault(bc => bc.ScoutId == scout.Id);
+                    var completionRecord = badgeCompletion
+                        ?.Achievements
+                        .FirstOrDefault(a => a.Key == criteria.Id)
+                        .Value ?? string.Empty;
+                    var completed = !string.IsNullOrEmpty(completionRecord) && !completionRecord.StartsWith('x');
+
+                    if (completed && badgeCompletion.Completed)
+                    {
+                        <td class="@(highlight ? "rowHighlight" : string.Empty) badgeComplete">C</td>
+                    }
+                    else
+                    {
+                        if (completed)
+                        {
+                            <td class="@(highlight ? "rowHighlight" : string.Empty) taskComplete">Y</td>
+                        }
+                        else
+                        {
+                            <td class="@(highlight ? "rowHighlight" : string.Empty)">&nbsp;</td>
+                        }
+                    }
+                }
+            </tr>
+        }
 
     }
+    </tbody>
 </table>

@@ -59,9 +59,6 @@ public class OsmClient : IOsmClient
             var criteriaNodes = JsonPath.Parse($"$['structure']['{badge.Id}_{badge.Version}']..['rows']").Evaluate(node);
             var coreCriteria = JsonDocumentExtensions.ToJsonDocument(criteriaNodes.Matches[1].Value).RootElement.ToJsonString();
             badge.Criteria = JsonSerializer.Deserialize<List<Criteria>>(coreCriteria);
-            
-            // TODO: Load configuration element
-            
             badges.Add(badge);
         }
         

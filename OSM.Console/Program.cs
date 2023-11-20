@@ -66,7 +66,7 @@ foreach (var badge in badges)
 
 AnsiConsole.Write(table);
 
-// TODO : Build CSV output
+// Build CSV output
 Console.WriteLine(csvStringBuilder.ToString());
 
 table.Rows.Clear();
