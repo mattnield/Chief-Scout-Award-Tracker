@@ -14,6 +14,7 @@ public class Badge
     public string Description { get; set; } = string.Empty;
 
     [JsonPropertyName("type_id")] public BadgeType Type { get; set; }
+    [JsonPropertyName("picture")] public string Image { get; set; }
 
     [JsonIgnore] public Dictionary<string, List<Criteria>> Areas { get; set; } = new();
     
@@ -38,6 +39,20 @@ public class Badge
     [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
     public int Order { get; set; }
 }
+
+public record Badges(
+    string completed,
+    string awarded,
+    int awarded_date,
+    string badge,
+    string badge_shortname,
+    string badge_group,
+    double status,
+    string picture,
+    string badge_identifier,
+    string badge_id,
+    object level
+);
 
 public record Criteria
 {

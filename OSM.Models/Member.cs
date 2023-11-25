@@ -14,5 +14,6 @@ public class Member
     public string LastName { get; set; } = string.Empty;
     [JsonPropertyName("patrolid")]
     public int PatrolId { get; set; }
-
+    [JsonPropertyName("badges")]
+    public BadgeSummary[] Badges { get; set; }
 }

@@ -30,7 +30,7 @@ public class OsmClient : IOsmClient
         };
 
         _client = new RestClient(restClientOptions);
-    }
+    } 
 
     public async Task<IList<Badge>> GetBadgesAsync(string termId, BadgeType type)
     {
@@ -125,5 +125,23 @@ public class OsmClient : IOsmClient
             .Where(result => result != null);
 
         return output.ToList();
+    }
+
+    public async Task<IList<Member?>> GetPersonBadgeSummaryAsync(string termId)
+    {
+        var request = new RestRequest("/ext/badges/badgesbyperson/");
+        request.Parameters.AddParameter(new QueryParameter("action", "loadBadgesByMember"));
+        request.Parameters.AddParameter(new QueryParameter("section", _options.Section));
+        request.Parameters.AddParameter(new QueryParameter("sectionid", _options.SectionId.ToString()));
+        request.Parameters.AddParameter(new QueryParameter("term_id", termId));
+        
+        var response = await _client.ExecuteGetAsync(request);
+        if(string.IsNullOrEmpty(response.Content)) return Array.Empty<Member>();
+        var node = JsonNode.Parse(response.Content!);
+        
+        var evaluateResult = JsonPath.Parse($"$['data'][*]").Evaluate(node);
+        
+        if(evaluateResult.Matches == null || !evaluateResult.Matches.Any()) return Array.Empty<Member>();
+        return evaluateResult.Matches.Select(match => JsonSerializer.Deserialize<Member>(match.Value.AsJsonString())).ToList();
     }
 }

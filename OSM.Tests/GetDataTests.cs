@@ -48,6 +48,25 @@ public class GetDataTests
         Assert.NotNull(skillsBadge);
         Assert.NotEmpty(skillsBadge.Criteria);
     }
+    
+    
+    [Fact]
+    public async Task GetBadgeSummaries()
+    {
+        var currentTerm = (await _client.GetTermsAsync()).ToArray().First(t => t.Current);
+        var badges = await _client.GetPersonBadgeSummaryAsync(currentTerm.Id);
+        
+        Assert.NotNull(badges);
+        Assert.NotEmpty(badges);
+
+        var member = badges.First(b => b.FirstName == "Jax");
+        
+        
+        Assert.NotNull(member);
+        
+        Assert.NotNull(member.Badges);
+        Assert.NotEmpty(member.Badges);
+    }
 
     [Fact]
     public async Task GetTerms()
