@@ -1,0 +1,14 @@
+{
+    "name": "1st KA Scouts",
+    "short_name": "kascouts",
+    "icons": [
+       {
+          "src": "img//android-chrome-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+       }
+    ],
+    "theme_color": "#FFFFFF",
+    "background_color": "#FFFFFF",
+    "display": "standalone"
+ }
