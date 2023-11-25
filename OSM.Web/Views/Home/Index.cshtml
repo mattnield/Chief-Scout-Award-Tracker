@@ -9,9 +9,13 @@
         width: 2rem;
     }
     
-    td, th {
+    .centerTable {
+        margin: 0 auto;
+    }
+    
+    tbody td, tbody th {
             border: 1px solid black;
-        }
+    }
         
     .badgeComplete {
         background-color: gold !important;
@@ -26,14 +30,15 @@
 <div class="text-center">
     <h1 class="display-4">1<sup>st</sup> King Alfred's</h1>
     <h2>Wantage Scout Group</h2>
-    <table>
+    <table class="centerTable">
         <thead>
         <tr>
             <td></td>
             @foreach (var badge in Model.Badges)
             {
                 <td>
-                    <img class="badgeImage" title="@badge.Name" src="https://www.onlinescoutmanager.co.uk/@badge.Image" alt="@badge.Name Challenge Badge"/></td>
+                    <img class="badgeImage" title="@badge.Name" src="https://www.onlinescoutmanager.co.uk/@badge.Image" alt="@badge.Name Challenge Badge"/>
+                </td>
             }
         </tr>
         </thead>
@@ -43,13 +48,13 @@
             <tr>
                 <th>@member.Name</th>
 
-            @foreach (var badge in member.Badges)
-            {
-                <td class="@("badge"+badge.Value)">&nbsp;</td>
-            }
-            
-                        </tr>
-            }
+                @foreach (var badge in member.Badges)
+                {
+                    <td class="@("badge" + badge.Value)">&nbsp;</td>
+                }
+
+            </tr>
+        }
         </tbody>
     </table>
 </div>
