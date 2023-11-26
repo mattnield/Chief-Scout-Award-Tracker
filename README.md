@@ -1,13 +1,23 @@
 # OSM
 A .NET library that wraps around the [OSM (Online Scout Manager)](https://www.onlinescoutmanager.co.uk/) API to make retrieving data simpler. I've created my own classes to represent 
-the objects in OSM, as they better match my usecases.
+the objects in OSM, as they better match my use-cases.
 
 The OSM API is reasonably undocumented, so I'll do my best to document that here. 
 
 ## Functions
 
-- Summary of CSA progress
-- Detailed CSA progress
+### Summary of CSA progress
+
+A quick list of group members and which of the challenge badges they have achieved.
+
+![csa_summary](https://github.com/mattnield/Chief-Scout-Award-Tracker/assets/11173358/4bead5ac-173b-4afb-ac1d-5943e36bfb1d)
+
+
+### Detailed CSA progress
+
+Provides a breakdown of each member against the challenge badge
+
+![csa_detail](https://github.com/mattnield/Chief-Scout-Award-Tracker/assets/11173358/d516e2d0-5e3c-49f8-8b50-63f94b6546e7)
 
 ## Configuration
 
