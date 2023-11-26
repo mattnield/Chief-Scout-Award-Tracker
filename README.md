@@ -4,6 +4,11 @@ the objects in OSM, as they better match my usecases.
 
 The OSM API is reasonably undocumented, so I'll do my best to document that here. 
 
+## Functions
+
+- Summary of CSA progress
+- Detailed CSA progress
+
 ## Configuration
 
 While the configuration and scopes currently support both read and write activities, none of the code in this repository performs any write 
@@ -30,6 +35,10 @@ application specifies.
 - `member`: Personal details, including adding/removing/transferring, emailing, obtaining contact details etc.
 - `programme`: Programme
 - `quartermaster`: Quartermaster's area
+
+## Issues
+
+- I'm really bad at CSS, so the layout could be much better!
 
 ### References
 
