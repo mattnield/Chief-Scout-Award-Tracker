@@ -92,6 +92,17 @@ public class GetDataTests
         Assert.NotNull(me);
     }
     
+    
+    [Fact]
+    public async Task GetPatrolsWithMembers()
+    {
+        var currentTerm = (await _client.GetTermsAsync()).ToArray().First(t => t.Current);
+        
+        var patrols = (await _client.GetPatrols(currentTerm.Id)).ToArray();
+        Assert.NotNull(patrols);
+        Assert.NotEmpty(patrols);
+    }
+    
     [Fact]
     public async Task BadgeCompletion()
     {

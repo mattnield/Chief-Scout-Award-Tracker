@@ -144,4 +144,24 @@ public class OsmClient : IOsmClient
         if(evaluateResult.Matches == null || !evaluateResult.Matches.Any()) return Array.Empty<Member>();
         return evaluateResult.Matches.Select(match => JsonSerializer.Deserialize<Member>(match.Value.AsJsonString())).ToList();
     }
+
+    public async Task<IList<Patrol>> GetPatrols(string termId, bool includeNoPatrol = true)
+    {
+
+        var request = new RestRequest("/ext/members/patrols/");
+        request.Parameters.AddParameter(new QueryParameter("action", "getPatrolsWithPeople"));
+        request.Parameters.AddParameter(new QueryParameter("sectionid", _options.SectionId.ToString()));
+        request.Parameters.AddParameter(new QueryParameter("termid", termId));
+        request.Parameters.AddParameter(new QueryParameter("include_no_patrol", includeNoPatrol ? "y" : "n"));
+
+        var response = await _client.ExecuteGetAsync(request);
+        if (string.IsNullOrEmpty(response.Content)) return new List<Patrol>();
+        var node = JsonNode.Parse(response.Content!);
+
+        var evaluateResult = JsonPath.Parse($"$[*]").Evaluate(node);
+
+        if (evaluateResult.Matches == null || !evaluateResult.Matches.Any()) return Array.Empty<Patrol>();
+        return evaluateResult.Matches.Select(match => JsonSerializer.Deserialize<Patrol>(match.Value.AsJsonString()))
+            .ToList();
+    }
 }

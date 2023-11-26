@@ -10,4 +10,5 @@ public interface IOsmClient
     Task<IList<Member>> GetMembersAsync(string termId);
     Task<IList<BadgeCompletion>> GetBadgeCompletion(string termId, string badgeId, string badgeVersion);
     Task<IList<Member>> GetPersonBadgeSummaryAsync(string termId);
+    Task<IList<Patrol>> GetPatrols(string termId, bool includeNoPatrol = true);
 }
