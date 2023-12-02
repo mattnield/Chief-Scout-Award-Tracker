@@ -36,8 +36,7 @@ public class GetDataTests
     [Fact]
     public async Task GetBadges()
     {
-        var currentTerm = (await _client.GetTermsAsync()).ToArray().First(t => t.Current);
-        var badges = await _client.GetBadgesAsync(currentTerm.Id, BadgeType.Challenge);
+        var badges = _client.GetBadgesByType(BadgeType.Challenge);
         
         Assert.NotNull(badges);
         Assert.NotEmpty(badges);
@@ -53,15 +52,16 @@ public class GetDataTests
     [Fact]
     public async Task GetBadgeSummaries()
     {
-        var currentTerm = (await _client.GetTermsAsync()).ToArray().First(t => t.Current);
-        var badges = await _client.GetPersonBadgeSummaryAsync(currentTerm.Id);
+        var badges = await _client.GetPersonBadgeSummaryAsync();
+        var challengeBadges = _client.GetBadgesByType(BadgeType.Challenge);
         
         Assert.NotNull(badges);
         Assert.NotEmpty(badges);
 
-        var member = badges.First(b => b.FirstName == "Jax");
+        var member = badges.First();
+        var memberBadges = member.Badges.Where(b => b.BadgeType == BadgeType.Challenge);
         
-        
+        // Assert.Equal(challengeBadges.Count, memberBadges.Count()); // This is only equal when _all_ badges of the type are complete 
         Assert.NotNull(member);
         
         Assert.NotNull(member.Badges);
@@ -82,9 +82,7 @@ public class GetDataTests
     [Fact]
     public async Task GetMembers()
     {
-        var currentTerm = (await _client.GetTermsAsync()).ToArray().First(t => t.Current);
-        
-        var members = (await _client.GetMembersAsync(currentTerm.Id)).ToArray();
+        var members = (await _client.GetMembersAsync()).ToArray();
         Assert.NotNull(members);
         Assert.NotEmpty(members);
 
@@ -96,9 +94,7 @@ public class GetDataTests
     [Fact]
     public async Task GetPatrolsWithMembers()
     {
-        var currentTerm = (await _client.GetTermsAsync()).ToArray().First(t => t.Current);
-        
-        var patrols = (await _client.GetPatrols(currentTerm.Id)).ToArray();
+        var patrols = (await _client.GetPatrols()).ToArray();
         Assert.NotNull(patrols);
         Assert.NotEmpty(patrols);
     }
@@ -106,13 +102,20 @@ public class GetDataTests
     [Fact]
     public async Task BadgeCompletion()
     {
-        var currentTerm = (await _client.GetTermsAsync()).ToArray().First(t => t.Current);
         var skillsBadge =
-            (await _client.GetBadgesAsync(currentTerm.Id, BadgeType.Challenge)).First(b => b.Name == "Skills");
+            _client.GetBadgesByType(BadgeType.Challenge).First(b => b.Name == "Skills");
 
-        var completion = await _client.GetBadgeCompletion(currentTerm.Id, skillsBadge.Id, skillsBadge.Version);
+        var completion = await _client.GetBadgeCompletion(skillsBadge.Id, skillsBadge.Version);
         
         Assert.NotNull(completion);
         Assert.NotEmpty(completion);
+    }
+
+    [Fact]
+    public async Task GetMember()
+    {
+        var member = await _client.GetMemberAsync(756599);
+        
+        Assert.NotNull(member);
     }
 }

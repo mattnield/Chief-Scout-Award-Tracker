@@ -12,19 +12,16 @@ IConfiguration config = new ConfigurationBuilder()
     .Build();
         
 var _client = new OsmClient(config);
-var _options = new OsmOptions(config);
 
-// Get current term
-var term = (await _client.GetTermsAsync()).First(t => t.Current);
 // Get current challenge badges
-var badges = await _client.GetBadgesAsync(term.Id, BadgeType.Challenge);
+var badges = _client.GetBadgesByType(BadgeType.Challenge);
 
 foreach (var badge in badges)
 {
     Console.WriteLine($"- {badge.Id}_{badge.Version}:{badge.Name}");
 }
 // Get current members
-var members = (await _client.GetMembersAsync(term.Id)).Where(m => m.PatrolId >= 0);
+var members = (await _client.GetMembersAsync()).Where(m => m.PatrolId >= 0);
 var table = new Table();
 table.AddColumns("Badge", "Module", "Task");
 table.AddColumns(members.Select(member => string.Join(' ', member.FirstName, member.Initial)).ToArray());
@@ -35,7 +32,7 @@ csvStringBuilder.AppendFormat("Badge,Module,Task,{0}\n", string.Join(',', member
 
 foreach (var badge in badges)
 {
-    var badgeCompletion = await _client.GetBadgeCompletion(term.Id, badge.Id, badge.Version);
+    var badgeCompletion = await _client.GetBadgeCompletion(badge.Id, badge.Version);
     foreach (var criteria in badge.Criteria)
     {
         csvStringBuilder.AppendJoin(',', $"\"{badge.Name}\"", $"\"{criteria.Module}\"", $"\"{criteria.Name}\"");

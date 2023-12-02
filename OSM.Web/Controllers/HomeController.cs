@@ -18,21 +18,20 @@ public class HomeController : Controller
         _logger = logger;
     }
 
-    private BadgeProgress GetBadgeProgress(string badgeId, BadgeSummary[] badges)
+    private BadgeProgress GetBadgeProgress(int badgeId, BadgeSummary[] badges)
     {
-        if (!badges.Any(b => b.badge_id == badgeId)) return BadgeProgress.NotStarted;
+        if (!badges.Any(b => b.Id == badgeId)) return BadgeProgress.NotStarted;
 
-        return (badges.First(b => b.badge_id == badgeId).completed == "1")
+        return (badges.First(b => b.Id == badgeId).IsComplete)
             ? BadgeProgress.Complete
             : BadgeProgress.Started;
     }
     public async Task<IActionResult> Index()
     {
-        var term = (await _client.GetTermsAsync()).First(t => t.Current);
-        var members = await _client.GetPersonBadgeSummaryAsync(term.Id);
+        var members = await _client.GetPersonBadgeSummaryAsync();
         var model = new HomepageViewModel()
         {
-            Badges = await _client.GetBadgesAsync(term.Id, BadgeType.Challenge)
+            Badges = _client.GetBadgesByType(BadgeType.Challenge)
         };
 
         foreach (var member in members)
@@ -41,7 +40,7 @@ public class HomeController : Controller
             {
                 Name = string.Join(' ', member.FirstName, member.Initial),
                 Id = member.Id,
-                Badges = model.Badges.Select(badge => new KeyValuePair<string,BadgeProgress>(badge.Id, GetBadgeProgress(badge.Id, member.Badges))).ToList().ToDictionary(o => o.Key, o=> o.Value)
+                Badges = model.Badges.Select(badge => new KeyValuePair<int,BadgeProgress>(badge.Id, GetBadgeProgress(badge.Id, member.Badges))).ToDictionary(o => o.Key, o=>o.Value)
             });
         }
         

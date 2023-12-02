@@ -1,0 +1,21 @@
+{
+  "badge_id": "1539",
+  "badge_version": "0",
+  "shortname": "1539",
+  "badge_identifier": "1539_0",
+  "name": "Chief Scout\u0027s Gold",
+  "picture": "sites/onlinescoutmanager.co.uk/badge_images/img_231896.png",
+  "description": "Finish the nine challenge awards \u0026 earn six activity or staged activity badges of your choice. (Please note - this not automatically calculated)",
+  "parents_description": "Finish the nine challenge awards \u0026 earn six activity or staged activity badges of your choice.",
+  "config": "{\u0022requires\u0022:[[\u0022a\u0022],[\u0022b\u0022]]}",
+  "portal_config": "{\u0022always_show_in_list\u0022:false,\u0022position\u0022:{\u0022x\u0022:150,\u0022y\u0022:190},\u0022hide\u0022:false}",
+  "userid": "1",
+  "sharing": "default-locked",
+  "latest": "0",
+  "badge_order": "0",
+  "group_name": "",
+  "created_at": "2015-01-26 16:26:08",
+  "lastupdated": "2020-07-10 14:25:13",
+  "type_id": "1",
+  "badge_id_version": "1539_0"
+}

@@ -5,6 +5,7 @@ namespace OSM.Models;
 public class Member
 {
     [JsonPropertyName("scoutid")]
+    [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
     public int Id { get; set; }
     [JsonPropertyName("firstname")]
     public string FirstName { get; set; } = string.Empty;
@@ -16,6 +17,7 @@ public class Member
     [JsonPropertyName("badges")]
     public BadgeSummary[] Badges { get; set; }
     [JsonPropertyName("patrolid")]
+    [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
     public int PatrolId { get; set; }
     [JsonPropertyName("patrol_role_level")]
     [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]

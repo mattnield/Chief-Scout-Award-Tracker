@@ -1,20 +1,21 @@
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
+using OSM.Models.Converters;
 
 namespace OSM.Models;
 
+[JsonConverter(typeof(BadgeConverter))]
 public class Badge
 {
-    [JsonPropertyName("badge_id")] public string Id { get; set; } = string.Empty;
-    [JsonPropertyName("badge_version")] public string Version { get; set; } = string.Empty;
-    [JsonPropertyName("name")] public string Name { get; set; } = string.Empty;
-
-    [JsonPropertyName("parents_description")]
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public BadgeType BadgeType { get; set; }
+    public string BadgeIdentifier { get; set; } = string.Empty;
+    public string Image { get; set; } = string.Empty;
+    public string Version { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
 
-    [JsonPropertyName("type_id")] public BadgeType Type { get; set; }
-    [JsonPropertyName("picture")] public string Image { get; set; }
 
     [JsonIgnore] public Dictionary<string, List<Criteria>> Areas { get; set; } = new();
     
@@ -39,20 +40,6 @@ public class Badge
     [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
     public int Order { get; set; }
 }
-
-public record Badges(
-    string completed,
-    string awarded,
-    int awarded_date,
-    string badge,
-    string badge_shortname,
-    string badge_group,
-    double status,
-    string picture,
-    string badge_identifier,
-    string badge_id,
-    object level
-);
 
 public record Criteria
 {

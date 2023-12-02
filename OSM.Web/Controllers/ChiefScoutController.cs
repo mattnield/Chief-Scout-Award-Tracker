@@ -19,15 +19,15 @@ public class ChiefScoutController : Controller
     {
         var term = (await _client.GetTermsAsync()).First(t => t.Current);
         var model = new ChiefScoutViewModel();
-        model.Badges = (await _client.GetBadgesAsync(term.Id, BadgeType.Challenge)).Where(badge => badge.Id!="1539").ToList();
+        model.Badges = _client.GetBadgesByType(BadgeType.Challenge).Where(badge => badge.Id!=1539).ToList();
         foreach (var badge in model.Badges)
         {
             model.Completion.Add(
                 badge.Id, 
-                await _client.GetBadgeCompletion(term.Id, badge.Id, badge.Version)
+                await _client.GetBadgeCompletion(badge.Id, badge.Version)
             );
         }
-        model.Members = (await _client.GetMembersAsync(term.Id)).Where(m => m.PatrolId >= 0).ToList();
+        model.Members = (await _client.GetMembersAsync()).Where(m => m.PatrolId >= 0).ToList();
         return View(model);
     }
 }

@@ -46,11 +46,12 @@
         @foreach (var member in Model.MemberProgress)
         {
             <tr>
-                <th>@member.Name</th>
+                <th><a href="@Url.Action("Detail","Member", new {id = member.Id})">@member.Name</a></th>
 
-                @foreach (var badge in member.Badges)
+                @foreach (var badge in Model.Badges)
                 {
-                    <td class="@("badge" + badge.Value)">&nbsp;</td>
+                    <td class="@("badge" + member.Badges[badge.Id])">&nbsp;</td>
+                    @* <td>&nbsp;</td> *@
                 }
 
             </tr>

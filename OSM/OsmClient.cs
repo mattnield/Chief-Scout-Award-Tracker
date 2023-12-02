@@ -15,6 +15,13 @@ public class OsmClient : IOsmClient
 {
     private readonly RestClient _client;
     private readonly OsmOptions _options;
+    private readonly Term _currentTerm;
+    private readonly IList<Badge> _badges;
+
+    public Term CurrentTerm
+    {
+        get => _currentTerm;
+    }
 
     public OsmClient(IConfiguration configuration) : this(new OsmOptions(configuration))
     { }
@@ -30,15 +37,26 @@ public class OsmClient : IOsmClient
         };
 
         _client = new RestClient(restClientOptions);
-    } 
+        
+        _currentTerm = GetTermsAsync().Result.ToArray().First(t => t.Current);
 
-    public async Task<IList<Badge>> GetBadgesAsync(string termId, BadgeType type)
+        _badges = GetBadgesAsync(BadgeType.Challenge).Result
+            .Concat(GetBadgesAsync(BadgeType.Activity).Result)
+            .Concat(GetBadgesAsync(BadgeType.Staged).Result)
+            .Concat(GetBadgesAsync(BadgeType.Core).Result).ToArray();
+    }
+
+    public IList<Badge> GetBadgesByType(BadgeType badgeType)
+    {
+        return _badges.Where(b => b.BadgeType == badgeType).ToList();
+    }
+    private async Task<IList<Badge>> GetBadgesAsync(BadgeType type)
     {
         var request = new RestRequest("/ext/badges/records/");
         request.Parameters.AddParameter(new QueryParameter("action", "getBadgeStructureByType"));
         request.Parameters.AddParameter(new QueryParameter("section", _options.Section));
         request.Parameters.AddParameter(new QueryParameter("section_id", _options.SectionId.ToString()));
-        request.Parameters.AddParameter(new QueryParameter("term_id", termId));
+        request.Parameters.AddParameter(new QueryParameter("term_id", _currentTerm.Id));
         request.Parameters.AddParameter(new QueryParameter("type_id", ((int) type).ToString()));
         var response = await _client.ExecuteGetAsync(request);
         var jsonString = response.Content ?? string.Empty;
@@ -57,8 +75,12 @@ public class OsmClient : IOsmClient
         {
             var badge = JsonSerializer.Deserialize<Badge>(match.Value!.ToJsonString(), options);
             var criteriaNodes = JsonPath.Parse($"$['structure']['{badge.Id}_{badge.Version}']..['rows']").Evaluate(node);
-            var coreCriteria = JsonDocumentExtensions.ToJsonDocument(criteriaNodes.Matches[1].Value).RootElement.ToJsonString();
-            badge.Criteria = JsonSerializer.Deserialize<List<Criteria>>(coreCriteria);
+            if(criteriaNodes.Matches.Count > 1)
+            {
+                var coreCriteria = JsonDocumentExtensions.ToJsonDocument(criteriaNodes.Matches[1].Value).RootElement
+                    .ToJsonString();
+                badge.Criteria = JsonSerializer.Deserialize<List<Criteria>>(coreCriteria);
+            }
             badges.Add(badge);
         }
         
@@ -80,13 +102,32 @@ public class OsmClient : IOsmClient
         return terms.ToList();
     }
 
-    public async Task<IList<Member>> GetMembersAsync(string termId)
+    public async Task<Member?> GetMemberAsync(int memberId)
+    {
+        
+        var request = new RestRequest("/ext/members/contact/");
+        request.Parameters.AddParameter(new QueryParameter("action", "getIndividual"));
+        request.Parameters.AddParameter(new QueryParameter("scoutid", memberId.ToString()));
+        request.Parameters.AddParameter(new QueryParameter("sectionid", _options.SectionId.ToString()));
+        request.Parameters.AddParameter(new QueryParameter("termid", _currentTerm.Id));
+        request.Parameters.AddParameter(new QueryParameter("context", "members"));
+        var response = await _client.ExecuteGetAsync(request);
+        var jsonString = response.Content ?? string.Empty;
+        var node = JsonNode.Parse(jsonString);
+        var memberNodes = JsonPath.Parse($"$['data']").Evaluate(node);
+        
+        if(memberNodes.Matches == null || !memberNodes.Matches.Any()) return null;
+        var s = memberNodes.Matches.First().Value.ToJsonString();
+        return JsonSerializer.Deserialize<Member>(s);
+    }
+
+    public async Task<IList<Member>> GetMembersAsync()
     {
         var request = new RestRequest("/ext/members/contact/");
         request.Parameters.AddParameter(new QueryParameter("action", "getListOfMembers"));
         request.Parameters.AddParameter(new QueryParameter("sort", "dob"));
         request.Parameters.AddParameter(new QueryParameter("sectionid", _options.SectionId.ToString()));
-        request.Parameters.AddParameter(new QueryParameter("termid", termId));
+        request.Parameters.AddParameter(new QueryParameter("termid", _currentTerm.Id));
         request.Parameters.AddParameter(new QueryParameter("section", _options.Section));
         var response = await _client.ExecuteGetAsync(request);
         var jsonString = response.Content ?? string.Empty;
@@ -99,14 +140,14 @@ public class OsmClient : IOsmClient
             JsonSerializer.Deserialize<IEnumerable<Member>>(match.Value.ToJsonString())).ToList();
     }
 
-    public async Task<IList<BadgeCompletion>> GetBadgeCompletion(string termId, string badgeId, string badgeVersion)
+    public async Task<IList<BadgeCompletion>> GetBadgeCompletion(int badgeId, string badgeVersion)
     {
         var request = new RestRequest("/ext/badges/records/");
         request.Parameters.AddParameter(new QueryParameter("action", "getBadgeRecords"));
         request.Parameters.AddParameter(new QueryParameter("sectionid", _options.SectionId.ToString()));
-        request.Parameters.AddParameter(new QueryParameter("termid", termId));
+        request.Parameters.AddParameter(new QueryParameter("termid", _currentTerm.Id));
         request.Parameters.AddParameter(new QueryParameter("section", _options.Section));
-        request.Parameters.AddParameter(new QueryParameter("badge_id", badgeId));
+        request.Parameters.AddParameter(new QueryParameter("badge_id", badgeId.ToString()));
         request.Parameters.AddParameter(new QueryParameter("badge_version", badgeVersion));
         request.Parameters.AddParameter(new QueryParameter("underscores", null));
         
@@ -127,13 +168,13 @@ public class OsmClient : IOsmClient
         return output.ToList();
     }
 
-    public async Task<IList<Member?>> GetPersonBadgeSummaryAsync(string termId)
+    public async Task<IList<Member?>> GetPersonBadgeSummaryAsync()
     {
         var request = new RestRequest("/ext/badges/badgesbyperson/");
         request.Parameters.AddParameter(new QueryParameter("action", "loadBadgesByMember"));
         request.Parameters.AddParameter(new QueryParameter("section", _options.Section));
         request.Parameters.AddParameter(new QueryParameter("sectionid", _options.SectionId.ToString()));
-        request.Parameters.AddParameter(new QueryParameter("term_id", termId));
+        request.Parameters.AddParameter(new QueryParameter("term_id", _currentTerm.Id));
         
         var response = await _client.ExecuteGetAsync(request);
         if(string.IsNullOrEmpty(response.Content)) return Array.Empty<Member>();
@@ -145,13 +186,13 @@ public class OsmClient : IOsmClient
         return evaluateResult.Matches.Select(match => JsonSerializer.Deserialize<Member>(match.Value.AsJsonString())).ToList();
     }
 
-    public async Task<IList<Patrol>> GetPatrols(string termId, bool includeNoPatrol = true)
+    public async Task<IList<Patrol>> GetPatrols(bool includeNoPatrol = true)
     {
 
         var request = new RestRequest("/ext/members/patrols/");
         request.Parameters.AddParameter(new QueryParameter("action", "getPatrolsWithPeople"));
         request.Parameters.AddParameter(new QueryParameter("sectionid", _options.SectionId.ToString()));
-        request.Parameters.AddParameter(new QueryParameter("termid", termId));
+        request.Parameters.AddParameter(new QueryParameter("termid", _currentTerm.Id));
         request.Parameters.AddParameter(new QueryParameter("include_no_patrol", includeNoPatrol ? "y" : "n"));
 
         var response = await _client.ExecuteGetAsync(request);
