@@ -16,6 +16,11 @@ public class BasicAuthMiddleware : IMiddleware
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
+        if (context.Request.Host.Host.ToLower() == "localhost")
+        {
+            await next.Invoke(context);
+            return;
+        }
         //Only do the secondary auth if the user is already authenticated
         if (context.User.Identity is {IsAuthenticated: false})
         {
