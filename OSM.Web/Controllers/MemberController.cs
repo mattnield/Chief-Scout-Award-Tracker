@@ -1,3 +1,4 @@
+using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using OSM.Interfaces;
 using OSM.Models;
@@ -6,7 +7,8 @@ using OSM.Web.Models;
 namespace OSM.Web.Controllers;
 
 public class MemberController : Controller
-{private IOsmClient _client { get; set; }
+{
+    private IOsmClient _client { get; set; }
     public MemberController(IOsmClient client)
     {
         _client = client;
@@ -40,8 +42,6 @@ public class MemberController : Controller
 
         model.BadgesInProgress = badges.Where(b =>
             b.CompletedLevel <= 0).ToList();
-        
-        // TODO : Get CSA details
         
         return View(model);
     }

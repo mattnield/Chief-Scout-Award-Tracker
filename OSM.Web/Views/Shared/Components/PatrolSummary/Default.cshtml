@@ -1,0 +1,19 @@
+@using OSM.Models
+@model OSM.Models.Patrol
+<h2>Patrol: @Model.Name</h2>
+<div>
+    <ul>
+        @foreach (var member in Model.Members)
+        {
+            <li>
+                <strong><vc:member-link member=@member></vc:member-link></strong>
+                @if(!string.IsNullOrEmpty(member.PatrolRole))
+                {
+                    <text>
+                        (@member.PatrolRole)
+                    </text>
+                }
+            </li>
+        }
+    </ul>
+</div>

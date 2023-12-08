@@ -40,7 +40,10 @@ public class HomeController : Controller
             {
                 Name = string.Join(' ', member.FirstName, member.Initial),
                 Id = member.Id,
-                Badges = model.Badges.Select(badge => new KeyValuePair<int,BadgeProgress>(badge.Id, GetBadgeProgress(badge.Id, member.Badges))).ToDictionary(o => o.Key, o=>o.Value)
+                Badges = model.Badges
+                    .Select(badge =>
+                        new KeyValuePair<int, BadgeProgress>(badge.Id, GetBadgeProgress(badge.Id, member.Badges)))
+                    .ToDictionary(o => o.Key, o => o.Value)
             });
         }
         

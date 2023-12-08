@@ -30,49 +30,22 @@
     <h1 class="display-4">@Model.Member.FirstName @Model.Member.LastName</h1>
 </div>
 <div class="row">
-
+    <vc:patrol-summary patrol=@Model.Patrol />
+</div>
+<div class="row">
     <h2 class="col-12">Badges</h2>
     <div class="col-lg-4 d-flex flex-column">
         <h3>This Term</h3>
-        @foreach (var badge in Model.BadgesThisTerm)
-        {
-            <span class="badge gy-2 d-flex rounded-pill p-1 pe-2 mb-2 @GetBadgeFormat(badge.BadgeType)">
-                <img class="rounded-circle me-1" width="24" height="24" src="https://www.onlinescoutmanager.co.uk/@badge.Image" alt="@badge.DisplayName">@badge.DisplayName
-            </span>
-        }
+        <vc:badge-list badges=@Model.BadgesThisTerm></vc:badge-list>
     </div>
 
-    <div class="col-lg-8">
+    <div class="col-lg-4">
         <h3>Awarded</h3>
-        @foreach (var badge in Model.BadgesLastTerm)
-        {
-            <span class="badge rounded-pill mb-2  @GetBadgeFormat(badge.BadgeType)">
-                <img class="rounded-circle me-1" width="24" height="24" src="https://www.onlinescoutmanager.co.uk/@badge.Image" alt="@badge.DisplayName">@badge.DisplayName
-            </span>
-        }
+        <vc:badge-list badges=@Model.BadgesLastTerm></vc:badge-list>
     </div>
     
-    <div class="col-lg-12">
+    <div class="col-lg-4">
         <h3>In Progress</h3>
-            @foreach (var badge in Model.BadgesInProgress)
-            {
-                <span class="badge rounded-pill mb-2  @GetBadgeFormat(badge.BadgeType)">
-                    <img class="rounded-circle me-1" width="24" height="24" src="https://www.onlinescoutmanager.co.uk/@badge.Image" alt="@badge.DisplayName">@badge.DisplayName
-                </span>
-            }
+        <vc:badge-list badges=@Model.BadgesInProgress></vc:badge-list>
     </div>
-</div>
-<div class="row">
-    <h2>Chief Scouts Award Progress</h2>
-    <p>Something nice here.</p>
-    <h2>Patrol: @Model.Patrol.Name</h2>
-    <table>
-        @foreach (var member in Model.Patrol.Members)
-        {
-            <tr>
-                <td>@member.FirstName @member.Initial</td>
-                <td>@member.PatrolRole</td>
-            </tr>
-        }
-    </table>
 </div>

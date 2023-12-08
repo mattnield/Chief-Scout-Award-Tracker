@@ -80,7 +80,7 @@ public class BadgeSummaryConverter : JsonConverter<BadgeSummary>
                                 }
                                 else
                                 {
-                                    badgeSummary.LevelText = reader.GetString();
+                                    badgeSummary.LevelText = reader.GetString().Remove(0,4);
                                 }
 
                                 break;

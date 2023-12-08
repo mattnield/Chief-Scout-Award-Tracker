@@ -1,0 +1,3 @@
+@model OSM.Models.Member
+
+@Html.ActionLink(string.Join(' ', Model.FirstName, Model.Initial).Trim(), "Detail", "Member", new {id=Model.Id})

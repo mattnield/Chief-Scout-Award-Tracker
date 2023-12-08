@@ -1,0 +1,9 @@
+@model IList<OSM.Models.BadgeSummary>
+<div>
+@foreach (var badge in Model)
+{
+    <span style="white-space: nowrap; padding-right: 1rem">
+        <img class="rounded-circle me-1" width="24" height="24" src="https://www.onlinescoutmanager.co.uk/@badge.Image" alt="@badge.DisplayName">@badge.DisplayName
+    </span>
+}
+</div>
