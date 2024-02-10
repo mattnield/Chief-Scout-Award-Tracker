@@ -21,28 +21,55 @@ public class MemberController : Controller
         var patrols = await _client.GetPatrols();
         var patrol = patrols.First(p => p.Members.Any(m => m.Id == member.Id));
         var badges = (await _client.GetPersonBadgeSummaryAsync()).First(m => m.Id == id).Badges;
+
+        var challengeAwards = (await Task.WhenAll(
+            _client.GetBadgesByType(BadgeType.Challenge)
+                .Where(badge => badge.Id != 1539)
+                .Select(async badge => 
+                    new KeyValuePair<Badge, IList<BadgeCompletion>>(
+                        badge, 
+                        (await _client.GetBadgeCompletion(badge.Id, badge.Version))
+                        .Where(c => c.ScoutId == id)
+                        .ToList()
+                    )
+                )
+        )).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        
         var model = new MemberDetailViewModel()
         {
-            Member = member,
+            Member = member!,
             Patrol = patrol,
-            BadgeSummaries = badges
+            BadgeSummaries = badges,
+            BadgesThisTerm = GetBadgesThisTerm(badges),
+            BadgesLastTerm = GetBadgesLastTerm(badges),
+            BadgesInProgress = GetBadgesInProgress(badges),
+            ChiefScoutProgress = challengeAwards
         };
+        
+        return View(model);
+    }
 
-        model.BadgesThisTerm = badges.Where(b =>
+    private static List<BadgeSummary> GetBadgesInProgress(BadgeSummary[] badges)
+    {
+        return badges.Where(b =>
+            b.CompletedLevel <= 0).ToList();
+    }
+
+    private List<BadgeSummary> GetBadgesLastTerm(BadgeSummary[] badges)
+    {
+        return badges.Where(b =>
+            (b.Awarded &&  b.AwardedDate.Value < _client.CurrentTerm.StartDate)).ToList();
+    }
+
+    private List<BadgeSummary> GetBadgesThisTerm(BadgeSummary[] badges)
+    {
+        return badges.Where(b =>
             (b.IsComplete) 
             &&
             (
                 !b.Awarded
-                    ||
+                ||
                 (b.Awarded && b.AwardedDate.Value >= _client.CurrentTerm.StartDate))
-            ).ToList();
-        
-        model.BadgesLastTerm = badges.Where(b =>
-            (b.Awarded &&  b.AwardedDate.Value < _client.CurrentTerm.StartDate)).ToList();
-
-        model.BadgesInProgress = badges.Where(b =>
-            b.CompletedLevel <= 0).ToList();
-        
-        return View(model);
+        ).ToList();
     }
 }

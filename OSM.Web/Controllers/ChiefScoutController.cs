@@ -16,8 +16,7 @@ public class ChiefScoutController : Controller
     
     // GET
     public async Task<IActionResult> Index()
-    {
-        var term = (await _client.GetTermsAsync()).First(t => t.Current);
+    {;
         var model = new ChiefScoutViewModel();
         model.Badges = _client.GetBadgesByType(BadgeType.Challenge).Where(badge => badge.Id!=1539).ToList();
         foreach (var badge in model.Badges)

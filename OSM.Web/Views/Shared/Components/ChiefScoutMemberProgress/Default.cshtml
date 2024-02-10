@@ -1,0 +1,61 @@
+@using OSM.Web.ViewComponents.Member
+@model IDictionary<OSM.Models.Badge, IList<OSM.Models.BadgeCompletion>>
+
+@{
+    ViewBag.Title = "Chief Scout Award";
+    var highlight = false;
+}
+
+
+<style>
+    table {width:100%}
+    table th {
+        width: 20rem;
+    }
+    
+    table tr td:nth-child(2) {
+        width: 40rem;
+    }
+    
+    td, th {
+        vertical-align: top;
+        border: 1px solid black;
+    }
+    
+    tr:nth-child(2n) {
+        background-color: #dee;
+    }
+    
+    .taskComplete {
+        background-color: lightgreen !important;
+    }
+    
+    summary h3 { display: inline; }
+</style>
+
+
+@foreach (var badge in Model.Keys)
+{
+    var badgeCompletion = Model[badge].FirstOrDefault();
+    var badgeCompleted = badgeCompletion?.Completed ?? false;
+
+    <details @(!badgeCompleted ? "open" : string.Empty)>
+        <summary><h3>@badge.Name @(badgeCompleted ? "(Complete)" : string.Empty)</h3></summary>
+        <table>
+            @foreach (var badgeCriteria in badge.Criteria)
+            {
+                var completionRecord = badgeCompletion
+                    ?.Achievements
+                    .FirstOrDefault(a => a.Key == badgeCriteria.Id)
+                    .Value ?? string.Empty;
+                var completed = !string.IsNullOrEmpty(completionRecord) && !completionRecord.StartsWith('x');
+                
+                <tr>
+                    <th class="@(highlight ? "rowHighlight" : string.Empty)">@badgeCriteria.Name</th>
+                    <td>@Html.Raw(badgeCriteria.Description.Replace("*", "<br />*"))</td>
+                    <td class="@(completed ? "taskComplete" : string.Empty)">@completionRecord</td>
+                </tr>
+            }
+        </table>
+    </details>
+}

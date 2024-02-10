@@ -20,4 +20,8 @@
       </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <AdditionalFiles Include="Views\Shared\Components\ChiefScoutMemberProgress\Default.cshtml" />
+    </ItemGroup>
+
 </Project>

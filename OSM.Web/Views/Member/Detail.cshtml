@@ -19,10 +19,9 @@
                 return "bg-danger border-danger";
             default:
                 return "bg-info border-info-emphasis text-dark";
-                
         }
     }
-    
+
 
 }
 
@@ -30,7 +29,7 @@
     <h1 class="display-4">@Model.Member.FirstName @Model.Member.LastName</h1>
 </div>
 <div class="row">
-    <vc:patrol-summary patrol=@Model.Patrol />
+    <vc:patrol-summary patrol=@Model.Patrol/>
 </div>
 <div class="row">
     <h2 class="col-12">Badges</h2>
@@ -43,9 +42,14 @@
         <h3>Awarded</h3>
         <vc:badge-list badges=@Model.BadgesLastTerm></vc:badge-list>
     </div>
-    
+
     <div class="col-lg-4">
         <h3>In Progress</h3>
         <vc:badge-list badges=@Model.BadgesInProgress></vc:badge-list>
     </div>
+
+</div>
+<div class="row">
+    <h2 class="col-12">Chief Scout</h2>
+    <vc:chief-scout-member-progress progress=@Model.ChiefScoutProgress></vc:chief-scout-member-progress>
 </div>

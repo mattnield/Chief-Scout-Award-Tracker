@@ -10,6 +10,9 @@ public class MemberDetailViewModel
     public IList<BadgeSummary> BadgesThisTerm { get; set; } = new List<BadgeSummary>();
     public IList<BadgeSummary> BadgesLastTerm { get; set; } = new List<BadgeSummary>();
     public IList<BadgeSummary> BadgesInProgress { get; set; } = new List<BadgeSummary>();
+
+    public IDictionary<Badge, IList<BadgeCompletion>> ChiefScoutProgress { get; set; } =
+        new Dictionary<Badge, IList<BadgeCompletion>>();
 }
 
 public class BadgeStatus
