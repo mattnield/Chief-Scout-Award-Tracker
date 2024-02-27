@@ -51,13 +51,6 @@ jobs:
         with:
           name: .net-app
           
-      - name: Create App Settings
-        id: create-json
-        uses: devops-actions/json-to-file@v1.0.0
-        with:
-          json: ${{ vars.APP_SETTINGS }}
-          filename: 'appsettings.json'
-          
       - name: Update App Settings
         uses: microsoft/variable-substitution@v1
         with:
@@ -123,13 +116,6 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: .net-app
-          
-      - name: Create App Settings
-        id: create-json
-        uses: devops-actions/json-to-file@v1.0.0
-        with:
-          json: ${{ vars.APP_SETTINGS }}
-          filename: 'appsettings.json'
           
       - name: Update App Settings
         uses: microsoft/variable-substitution@v1
