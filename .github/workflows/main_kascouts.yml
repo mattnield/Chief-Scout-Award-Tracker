@@ -27,7 +27,7 @@ jobs:
         uses: jsdaniell/create-json@v1.2.3
         with:
           name: "appsettings.json"
-          json: ${{ variables.APP_SETTINGS }}
+          json: ${{ vars.APP_SETTINGS }}
 
       - name: Build with dotnet
         run: dotnet build --configuration Release
