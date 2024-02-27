@@ -48,13 +48,14 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: .net-app
+          
 
       - name: Create App Settings
         id: create-json
-        uses: jsdaniell/create-json@v1.2.3
-        with:
-          name: 'appsettings.json'
-          json: ${{ vars.APP_SETTINGS }}
+        uses: finnp/create-file-action@master
+        env:
+          FILE_NAME: "appsettings.json"
+          FILE_DATA: ${{ vars.APP_SETTINGS }}
           
       - name: Update App Settings
         uses: microsoft/variable-substitution@v1
