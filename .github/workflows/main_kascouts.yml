@@ -11,8 +11,7 @@ on:
 
 jobs:
 
-  # 1st KA
-  build-first:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -36,9 +35,11 @@ jobs:
           name: .net-app
           path: ${{env.DOTNET_ROOT}}/myapp
 
+
+  # 1st KA
   deploy-first:
     runs-on: ubuntu-latest
-    needs: build-first
+    needs: build
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
@@ -78,33 +79,9 @@ jobs:
           package: .
           
   # 4th KA
-  build-fourth:
-    runs-on: windows-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up .NET Core
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '6.0.x'
-          include-prerelease: true
-
-      - name: Build with dotnet
-        run: dotnet build --configuration Release
-
-      - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
-
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v3
-        with:
-          name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
-          
   deploy-fourth:
-    runs-on: windows-latest
-    needs: build-fourth
+    runs-on: ubuntu-latest
+    needs: build
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
