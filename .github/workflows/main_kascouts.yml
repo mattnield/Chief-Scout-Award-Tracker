@@ -34,7 +34,7 @@ jobs:
       - name: Update First App Settings
         uses: microsoft/variable-substitution@v1
         with:
-          files: ${{env.DOTNET_ROOT}}/myapp/first/appsettings.json
+          files: ${{env.DOTNET_ROOT}}/myapp/first/appsettings.production.json
         env:
           auth.user: ${{secrets.AUTH_USER}}
           auth.password: ${{secrets.AUTH_PASSWORD}}
@@ -45,7 +45,7 @@ jobs:
       - name: Update Fourth App Settings
         uses: microsoft/variable-substitution@v1
         with:
-          files: ${{env.DOTNET_ROOT}}/myapp/fourth/appsettings.json
+          files: ${{env.DOTNET_ROOT}}/myapp/fourth/appsettings.production.json
         env:
           auth.user: ${{secrets.AUTH_USER}}
           auth.password: ${{secrets.AUTH_PASSWORD}}
