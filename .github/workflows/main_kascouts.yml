@@ -25,44 +25,45 @@ jobs:
       - name: Build with dotnet
         run: dotnet build --configuration Release
 
-      - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+      - name: dotnet publish first
+        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp/first
+        
+      - name: dotnet publish fourth
+        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp/fourth
 
-      - name: Update Common App Settings
+      - name: Update First App Settings
         uses: microsoft/variable-substitution@v1
         with:
-          files: ${{env.DOTNET_ROOT}}/myapp/appsettings.json
+          files: ${{env.DOTNET_ROOT}}/myapp/first/appsettings.json
         env:
           auth.user: ${{secrets.AUTH_USER}}
           auth.password: ${{secrets.AUTH_PASSWORD}}
           OsmOptions.ClientId: ${{secrets.OSM_CLIENT_ID}}
           OsmOptions.ClientSecret: ${{secrets.OSM_CLIENT_SECRET}}
+          OsmOptions.SectionId: 29148
           
-      - name: Update First App Settings
+      - name: Update Fourth App Settings
         uses: microsoft/variable-substitution@v1
         with:
-          files: ${{env.DOTNET_ROOT}}/myapp/appsettings.json
+          files: ${{env.DOTNET_ROOT}}/myapp/fourth/appsettings.json
         env:
-          OsmOptions.SectionId: 29148
+          auth.user: ${{secrets.AUTH_USER}}
+          auth.password: ${{secrets.AUTH_PASSWORD}}
+          OsmOptions.ClientId: ${{secrets.OSM_CLIENT_ID}}
+          OsmOptions.ClientSecret: ${{secrets.OSM_CLIENT_SECRET}}
+          OsmOptions.SectionId: 15370
 
       - name: Upload First artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
           name: first
-          path: ${{env.DOTNET_ROOT}}/myapp
-
-      - name: Update Fourth App Settings
-        uses: microsoft/variable-substitution@v1
-        with:
-          files: ${{env.DOTNET_ROOT}}/myapp/appsettings.json
-        env:
-          OsmOptions.SectionId: 15370
+          path: ${{env.DOTNET_ROOT}}/myapp/first
 
       - name: Upload Fourth artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
           name: fourth
-          path: ${{env.DOTNET_ROOT}}/myapp
+          path: ${{env.DOTNET_ROOT}}/myapp/fourth
 
   deploy-first:
     runs-on: ubuntu-latest
