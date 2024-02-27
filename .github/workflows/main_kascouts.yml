@@ -49,13 +49,12 @@ jobs:
         with:
           name: .net-app
           
-
       - name: Create App Settings
         id: create-json
-        uses: finnp/create-file-action@master
-        env:
-          FILE_NAME: "appsettings.json"
-          FILE_DATA: ${{ vars.APP_SETTINGS }}
+        uses: devops-actions/json-to-file@v1.0.0
+        with:
+          json: ${{ vars.APP_SETTINGS }}
+          filename: 'appsettings.json'
           
       - name: Update App Settings
         uses: microsoft/variable-substitution@v1
