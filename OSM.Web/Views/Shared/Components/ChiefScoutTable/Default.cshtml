@@ -38,15 +38,43 @@
         background-color: lightcyan;
     }
     
+    .taskInProgress {
+        background-color: lightgray !important;
+    }    
+    
+    .taskComplete {
+        background-color: lightgreen !important;
+    }    
+    
     .badgeComplete {
         background-color: gold !important;
     }
     
-    .taskComplete {
-        background-color: lightgreen !important;
-    }
+
+    
+    
+
 </style>
 
+<details>
+    <summary>Key</summary>
+
+    <table>
+        <tr>
+            <td class="rowHighlight">&nbsp;</td><td>No progress</td>
+        </tr>
+        <tr>
+            <td class="taskInProgress">X</td><td>Task is in progress</td>
+        </tr>
+        <tr>
+            <td class="taskComplete">Y</td><td>Task is complete</td>
+        </tr>
+        <tr>
+            <td class="badgeComplete">C</td><td>Badge is complete</td>
+        </tr>
+    </table>
+</details>
+<p>&nbsp;</p>
 <table>
     <thead>
     <tr>
@@ -55,7 +83,11 @@
         <th>Task</th>
         @foreach (var member in Model.Members)
         {
-            <th><span class="memberName"><vc:member-link member=@member></vc:member-link></span></th>
+            <th>
+                <span class="memberName">
+                    <vc:member-link member=@member></vc:member-link>
+                </span>
+            </th>
         }
     </tr>
     </thead>
@@ -91,27 +123,34 @@
                         ?.Achievements
                         .FirstOrDefault(a => a.Key == criteria.Id)
                         .Value ?? string.Empty;
-                    var completed = !string.IsNullOrEmpty(completionRecord) && !completionRecord.StartsWith('x');
 
-                    if (completed && badgeCompletion.Completed)
+                    var completed = !string.IsNullOrEmpty(completionRecord) && !completionRecord.StartsWith('x');
+                    var started = !string.IsNullOrEmpty(completionRecord);
+                    var inProgress = completionRecord.StartsWith('x');
+
+
+                    var styles = new List<string>();
+                    var text = string.Empty;
+
+                    if (highlight) styles.Add("rowHighlight");
+
+                    if (badgeCompletion!.Completed && started) styles.Add("badgeComplete");
+                    if (completed)
                     {
-                        <td class="@(highlight ? "rowHighlight" : string.Empty) badgeComplete">C</td>
+                        text = badgeCompletion.Completed ? "C" : "Y";
+                        styles.Add("taskComplete");
                     }
-                    else
+
+                    if (inProgress)
                     {
-                        if (completed)
-                        {
-                            <td class="@(highlight ? "rowHighlight" : string.Empty) taskComplete">Y</td>
-                        }
-                        else
-                        {
-                            <td class="@(highlight ? "rowHighlight" : string.Empty)">&nbsp;</td>
-                        }
+                        text = "X";
+                        styles.Add("taskInProgress");
                     }
+
+                    <td class="@(string.Join(' ', styles))" title="@Html.Encode(completionRecord)">@text</td>
                 }
             </tr>
         }
-
     }
     </tbody>
 </table>

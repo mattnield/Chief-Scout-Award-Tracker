@@ -1,6 +1,6 @@
 namespace OSM.Web.Models;
 
-public class MemberBadgeGroupSummary
+public class MemberBadgeGroupSummary : BaseViewModel
 {
     public string Name { get; set; }
     public int Id { get; set; }

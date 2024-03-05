@@ -18,6 +18,9 @@ public class OsmClient : IOsmClient
     private readonly Term _currentTerm;
     private readonly IList<Badge> _badges;
 
+    public string SectionName { get; set; }
+    public string SectionShortName { get; set; }
+
     public Term CurrentTerm
     {
         get => _currentTerm;
@@ -28,6 +31,9 @@ public class OsmClient : IOsmClient
 
     public OsmClient(OsmOptions options)
     {
+        SectionName = options.SectionName;
+        SectionShortName = options.SectionShortName;
+        
         _options = options;
         
         var restClientOptions = new RestClientOptions(_options.ClientEndpoint)

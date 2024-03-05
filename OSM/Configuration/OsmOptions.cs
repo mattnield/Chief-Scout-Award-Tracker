@@ -9,6 +9,8 @@ public class OsmOptions
     public string ClientEndpoint { get; set; } = "https://www.onlinescoutmanager.co.uk";
     public long SectionId { get; set; }
     public string Section { get; set; } = string.Empty;
+    public string SectionName { get; set; } = string.Empty;
+    public string SectionShortName { get; set; } = string.Empty;
     public IEnumerable<Permission> Permissions { get; set; } = new List<Permission>();
 
     public OsmOptions(IConfiguration configuration)

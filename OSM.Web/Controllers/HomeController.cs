@@ -31,7 +31,9 @@ public class HomeController : Controller
         var members = await _client.GetPersonBadgeSummaryAsync();
         var model = new HomepageViewModel()
         {
-            Badges = _client.GetBadgesByType(BadgeType.Challenge)
+            Badges = _client.GetBadgesByType(BadgeType.Challenge),
+            SectionName = _client.SectionName,
+            SectionShortName = _client.SectionShortName
         };
 
         foreach (var member in members)

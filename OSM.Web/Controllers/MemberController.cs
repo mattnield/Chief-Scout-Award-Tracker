@@ -43,7 +43,9 @@ public class MemberController : Controller
             BadgesThisTerm = GetBadgesThisTerm(badges),
             BadgesLastTerm = GetBadgesLastTerm(badges),
             BadgesInProgress = GetBadgesInProgress(badges),
-            ChiefScoutProgress = challengeAwards
+            ChiefScoutProgress = challengeAwards,
+            SectionName = _client.SectionName,
+            SectionShortName = _client.SectionShortName
         };
         
         return View(model);

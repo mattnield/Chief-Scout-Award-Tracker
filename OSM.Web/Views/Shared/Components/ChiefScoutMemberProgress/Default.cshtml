@@ -4,6 +4,7 @@
 @{
     ViewBag.Title = "Chief Scout Award";
     var highlight = false;
+    var module = "a";
 }
 
 
@@ -13,7 +14,7 @@
         width: 20rem;
     }
     
-    table tr td:nth-child(2) {
+    table tr td:nth-child(3) {
         width: 40rem;
     }
     
@@ -22,7 +23,7 @@
         border: 1px solid black;
     }
     
-    tr:nth-child(2n) {
+    .rowHighlight {
         background-color: #dee;
     }
     
@@ -36,22 +37,30 @@
 
 @foreach (var badge in Model.Keys)
 {
+    highlight = !highlight;
     var badgeCompletion = Model[badge].FirstOrDefault();
     var badgeCompleted = badgeCompletion?.Completed ?? false;
 
     <details @(!badgeCompleted ? "open" : string.Empty)>
         <summary><h3>@badge.Name @(badgeCompleted ? "(Complete)" : string.Empty)</h3></summary>
+        <p>@badge.Description</p>
         <table>
             @foreach (var badgeCriteria in badge.Criteria)
             {
+                if (!badgeCriteria.Module.Equals(module))
+                {
+                    module = badgeCriteria.Module;
+                    highlight = !highlight;
+                }
                 var completionRecord = badgeCompletion
                     ?.Achievements
                     .FirstOrDefault(a => a.Key == badgeCriteria.Id)
                     .Value ?? string.Empty;
                 var completed = !string.IsNullOrEmpty(completionRecord) && !completionRecord.StartsWith('x');
                 
-                <tr>
-                    <th class="@(highlight ? "rowHighlight" : string.Empty)">@badgeCriteria.Name</th>
+                <tr class="@(highlight ? "rowHighlight" : string.Empty)">
+                    <th>@badgeCriteria.Name</th>
+                    <td>&nbsp;@badgeCriteria.Module.ToUpperInvariant()&nbsp;</td>
                     <td>@Html.Raw(badgeCriteria.Description.Replace("*", "<br />*"))</td>
                     <td class="@(completed ? "taskComplete" : string.Empty)">@completionRecord</td>
                 </tr>

@@ -1,6 +1,7 @@
 ﻿@model HomepageViewModel;
 
 @{
+    ViewData["SectionShortName"] = Model.SectionShortName;
     ViewData["Title"] = "Home Page";
 }
 
@@ -28,7 +29,7 @@
 </style>
 
 <div class="text-center">
-    <h1 class="display-4">1<sup>st</sup> King Alfred's</h1>
+    <h1 class="display-4">@Model.SectionName</h1>
     <h2>Wantage Scout Group</h2>
     <table class="centerTable">
         <thead>
