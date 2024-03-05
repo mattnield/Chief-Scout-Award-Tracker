@@ -41,6 +41,8 @@ jobs:
           OsmOptions.ClientId: ${{secrets.OSM_CLIENT_ID}}
           OsmOptions.ClientSecret: ${{secrets.OSM_CLIENT_SECRET}}
           OsmOptions.SectionId: 29148
+          OsmOptions.SectionName: "1st King Alfred"
+          OsmOptions.SectionShortName: "1KA"
           
       - name: Update Fourth App Settings
         uses: microsoft/variable-substitution@v1
@@ -52,6 +54,8 @@ jobs:
           OsmOptions.ClientId: ${{secrets.OSM_CLIENT_ID}}
           OsmOptions.ClientSecret: ${{secrets.OSM_CLIENT_SECRET}}
           OsmOptions.SectionId: 15370
+          OsmOptions.SectionName: "4th King Alfred"
+          OsmOptions.SectionShortName: "4KA"
 
       - name: Upload First artifact for deployment job
         uses: actions/upload-artifact@v3
