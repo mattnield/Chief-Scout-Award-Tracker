@@ -2,7 +2,7 @@ using OSM.Models;
 
 namespace OSM.Web.Models;
 
-public class MemberDetailViewModel
+public class MemberDetailViewModel : BaseViewModel
 {
     public Member Member { get; set; }
     public Patrol Patrol { get; set; }

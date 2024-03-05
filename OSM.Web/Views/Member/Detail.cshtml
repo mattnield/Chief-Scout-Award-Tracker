@@ -2,6 +2,7 @@
 @model MemberDetailViewModel
 
 @{
+    ViewData["SectionShortName"] = Model.SectionShortName;
     ViewData["title"] = string.Join(' ', Model.Member.FirstName, Model.Member.Initial);
 }
 

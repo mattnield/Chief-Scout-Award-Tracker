@@ -4,6 +4,8 @@ namespace OSM.Interfaces;
 
 public interface IOsmClient
 {
+    string SectionName { get; set; }
+    string SectionShortName { get; set; }
     Term CurrentTerm { get; }
     IList<Badge> GetBadgesByType(BadgeType badgeType);
     Task<IList<Term>> GetTermsAsync();
