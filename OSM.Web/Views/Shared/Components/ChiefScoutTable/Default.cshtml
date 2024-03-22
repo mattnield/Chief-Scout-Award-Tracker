@@ -9,51 +9,57 @@
 
 
 <style>
-    .memberName {
-         writing-mode: vertical-rl;
-         transform: rotate(180deg);
-         text-align: left;
-         width: 100%;
-         display: table-cell;
-         text-wrap: none;
-    }
     
-    thead th {
-        vertical-align: bottom;
-    }
+.rotated-th {
+    height: 10rem ;
+    position: relative ;
+    padding: 0 10px;
+}
+.rotated-th__label {
+    display:block;
+    bottom: 0px ;
+    left: 50% ;
+    position: absolute ;
+    transform: rotate( -90deg ) ;
+    transform-origin: center left ;
+    white-space: nowrap ;
+}
     
-    td, th {
-        border: 1px solid black;
-    }
+.rotated-th__label a {
+    text-decoration:  none;
+}
     
-    th {
-        text-align:center;
-    }
-    
-    td{
-     text-align: center;
-    }
-    
-    .rowHighlight {
-        background-color: lightcyan;
-    }
-    
-    .taskInProgress {
-        background-color: lightgray !important;
-    }    
-    
-    .taskComplete {
-        background-color: lightgreen !important;
-    }    
-    
-    .badgeComplete {
-        background-color: gold !important;
-    }
-    
+thead th {
+    vertical-align: bottom;
+}
 
-    
-    
+td, th {
+    border: 1px solid black;
+}
 
+th {
+    text-align:center;
+}
+
+td{
+ text-align: center;
+}
+
+.rowHighlight {
+    background-color: lightcyan;
+}
+
+.taskInProgress {
+    background-color: lightgray !important;
+}    
+
+.taskComplete {
+    background-color: lightgreen !important;
+}    
+
+.badgeComplete {
+    background-color: gold !important;
+}
 </style>
 
 <details>
@@ -83,8 +89,8 @@
         <th>Task</th>
         @foreach (var member in Model.Members)
         {
-            <th>
-                <span class="memberName">
+            <th class="rotated-th">
+                <span class="memberName rotated-th__label">
                     <vc:member-link member=@member></vc:member-link>
                 </span>
             </th>
