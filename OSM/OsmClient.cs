@@ -43,8 +43,8 @@ public class OsmClient : IOsmClient
         };
 
         _client = new RestClient(restClientOptions);
-        
-        _currentTerm = GetTermsAsync().Result.ToArray().First(t => t.Current);
+        var allTerms = GetTermsAsync().Result.ToArray();
+        _currentTerm = allTerms.Any(t => t.Current) ? allTerms.First(t => t.Current) : allTerms.OrderByDescending(t => t.StartDate).First();
 
         _badges = GetBadgesAsync(BadgeType.Challenge).Result
             .Concat(GetBadgesAsync(BadgeType.Activity).Result)
