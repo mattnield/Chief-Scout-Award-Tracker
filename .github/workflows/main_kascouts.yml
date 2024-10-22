@@ -167,7 +167,7 @@ jobs:
           name: src-csa
       
       - name: Login to Azure
-        uses:  
+        uses: azure/login@v1
         with:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_B89A1EC66FDC4530BAE5B7AE5A673636 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_43E91CA1A56C4990AC89F045505B2222 }}
