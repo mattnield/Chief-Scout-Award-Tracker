@@ -63,7 +63,7 @@ jobs:
       - name: Update SRC App Settings
         uses: microsoft/variable-substitution@v1
         with:
-          files: ${{env.DOTNET_ROOT}}/myapp/fourth/appsettings.production.json
+          files: ${{env.DOTNET_ROOT}}/myapp/src-csa/appsettings.production.json
         env:
           auth.user: ${{secrets.AUTH_USER}}
           auth.password: ${{secrets.AUTH_PASSWORD}}
@@ -167,7 +167,7 @@ jobs:
           name: src-csa
       
       - name: Login to Azure
-        uses: azure/login@v1
+        uses:  
         with:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_B89A1EC66FDC4530BAE5B7AE5A673636 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_43E91CA1A56C4990AC89F045505B2222 }}
