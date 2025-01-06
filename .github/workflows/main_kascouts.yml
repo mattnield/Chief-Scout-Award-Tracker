@@ -70,7 +70,7 @@ jobs:
           OsmOptions.ClientId: ${{secrets.OSM_CLIENT_ID}}
           OsmOptions.ClientSecret: ${{secrets.OSM_CLIENT_SECRET}}
           OsmOptions.SectionId: 60711
-          OsmOptions.SectionName: "Sturat Rae Challenge"
+          OsmOptions.SectionName: "Stuart Rae Challenge"
           OsmOptions.SectionShortName: "SRC"
 
       - name: Upload First artifact for deployment job
